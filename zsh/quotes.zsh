@@ -1,20 +1,32 @@
 QUOTES_FILE="$DOTFILE_PATH/quotes.json" 
+PREVIOUS_AUTHOR_FILE="$DOTFILE_PATH/.previous_author"
+PREVIOUS_SOURCE_FILE="$DOTFILE_PATH/.previous_source"
 
-sanitize_quote_input() {
+function sanitize_quote_input() {
   echo "$1" | sed 's/"/\\"/g' | sed "s/'/\\'/g" | sed 's/\n/\\n/g' | sed 's/\r//g' | sed 's/\t/\\t/g'
 }
 
-quote() {
-  AUTHOR=$(sanitize_quote_input "$(gum input --placeholder "author")")
+function quote() {
+
+  # Check if the -p flag is set
+  if [ "$1" = "-p" ]; then
+    # Read the previous author and source from files if they exist
+    [ -f "$PREVIOUS_AUTHOR_FILE" ] && AUTHOR=$(cat "$PREVIOUS_AUTHOR_FILE")
+    [ -f "$PREVIOUS_SOURCE_FILE" ] && SOURCE=$(cat "$PREVIOUS_SOURCE_FILE")
+  else
+    AUTHOR=$(sanitize_quote_input "$(gum input --placeholder 'author')")
+    SOURCE=$(sanitize_quote_input "$(gum input --placeholder 'source')")
+  fi
+
   QUOTE=$(sanitize_quote_input "$(gum write --placeholder "quote")") 
-  SOURCE=$(sanitize_quote_input "$(gum input --placeholder "source")")
 
-
+  # Save the author and source for future use
+  echo "$AUTHOR" > "$PREVIOUS_AUTHOR_FILE"
+  echo "$SOURCE" > "$PREVIOUS_SOURCE_FILE"
 
   # Creating a JSON object
   JSON_STRING=$(printf '{"source": "%s", "author": "%s", "quote": "%s"}' \
     "$SOURCE" "$AUTHOR" "$QUOTE")
-
 
   # Ensuring that the file exists
   touch "$QUOTES_FILE"
