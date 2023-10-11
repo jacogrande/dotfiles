@@ -30,6 +30,18 @@ Terminal emulator configs + startup session script and theme. Create a symlink w
 2. Link to .config
    `ln -s {path to dotfiles/starship.toml} ~/.config/starship.toml`
 
+### QUOTES
+
+An ever-expanding list of quotes and a script that adds quotes to go with it. Requires [gum](https://github.com/charmbracelet/gum) and [jq](https://jqlang.github.io/jq/download/)
+
+Call the `quote` command in your shell to add a new quote.
+
+Add the following to your .zshrc file to get random quotes on startup:
+
+```
+get_random_quote
+```
+
 ### OTHER
 
 Here's a list of other handy tools and their installation instructions
