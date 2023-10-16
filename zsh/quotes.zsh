@@ -18,7 +18,7 @@ function quote() {
     SOURCE=$(sanitize_quote_input "$(gum input --placeholder 'source')")
   fi
 
-  QUOTE=$(sanitize_quote_input "$(gum write --placeholder "quote")") 
+  QUOTE=$(sanitize_quote_input "$(gum write --char-limit=0 --placeholder "quote")") 
 
   # Save the author and source for future use
   echo "$AUTHOR" > "$PREVIOUS_AUTHOR_FILE"
