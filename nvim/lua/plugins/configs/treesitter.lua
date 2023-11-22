@@ -13,8 +13,8 @@ local options = {
     "rust",
     "sql",
     "svelte",
-    "typescript",
     "yaml",
+    "python",
     "go",
     "tsx",
   },
@@ -36,6 +36,17 @@ local options = {
         comment = '// %s',
       },
       typescript = { __default = '// %s', __multiline = '/* %s */' },
+    }
+  },
+  textobjects = {
+    select = {
+      enable=true,
+      lookahead=true,
+      keymaps={
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+      },
+      include_surrounding_whitespace = true,
     }
   }
 }

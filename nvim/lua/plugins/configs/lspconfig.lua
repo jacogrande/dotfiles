@@ -64,6 +64,7 @@ require("lspconfig").lua_ls.setup {
   },
 }
 
+
 require("lspconfig").gopls.setup {
   on_attach = M.on_attach,
   capabilities = M.capabilities,
@@ -104,6 +105,15 @@ require("lspconfig").gopls.setup {
       semanticTokens = true,
     },
   },
+}
+
+require("lspconfig").svelte.setup {
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  cmd = { "svelteserver", "--stdio" },
+  filetypes = { "svelte" },
+  flags = { debounce_text_changes = 300 },
+  root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
 }
 
 return M

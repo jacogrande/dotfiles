@@ -73,7 +73,7 @@ local default_plugins = {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = {'JoosepAlviste/nvim-ts-context-commentstring'},
+    dependencies = {'JoosepAlviste/nvim-ts-context-commentstring', 'nvim-treesitter/nvim-treesitter-textobjects', 'tree-sitter/tree-sitter-python'},
     init = function()
       require("core.utils").lazy_load "nvim-treesitter"
     end,
@@ -312,6 +312,7 @@ local default_plugins = {
     config = function()
       require("typescript-tools").setup({
         on_attach=require("plugins.configs.lspconfig").on_attach,
+        tsserver_plugins = {"svelte"},
       })
       require("core.utils").load_mappings "TSTools"
     end,
@@ -357,12 +358,16 @@ local default_plugins = {
     end,
   },
   {
-    "MunifTanjim/prettier.nvim",
+    "MunifTanjim/eslint.nvim",
     config = function()
-      require("prettier").setup({})
+      require("eslint").setup({
+        on_attach=require("plugins.configs.lspconfig").on_attach,
+        flags = {
+          debounce_text_changes = 150,
+        },
+      })
     end,
-  },
-
+  }
 }
 
 local config = require("core.utils").load_config()

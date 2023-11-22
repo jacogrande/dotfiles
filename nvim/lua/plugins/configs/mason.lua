@@ -10,7 +10,7 @@ local options = {
     "json-lsp",
     "next-ls",
     "rust-analyzer",
-    "svelte-language-server",
+    "svelte-language-tools",
     "tailwindcss-language-server",
     "typescript-language-server",
   }, -- not an option from mason.nvim
