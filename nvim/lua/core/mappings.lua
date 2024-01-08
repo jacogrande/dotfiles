@@ -56,6 +56,10 @@ M.general = {
     -- move up and down
     ["<C-d>"] = { "<C-d>zz", "Move down half a screen" },
     ["<C-u>"] = { "<C-u>zz", "Move up half a screen" },
+    
+    -- newline enter
+    ["<CR>"] = {[[o<Esc>o<Esc>ko]], "Create three new lines and insert in the middle"},
+    ["<S-CR>"] = {[[O<Esc>O<Esc>jO]], "Create three new lines above and insert in the middle"},
 
     -- delete
     ["<leader>d"] = { '"_d', "Delete without yanking" },

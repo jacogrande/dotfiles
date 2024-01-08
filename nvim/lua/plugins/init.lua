@@ -367,7 +367,7 @@ local default_plugins = {
         },
       })
     end,
-  }
+  },
 }
 
 local config = require("core.utils").load_config()

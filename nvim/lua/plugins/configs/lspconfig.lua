@@ -116,4 +116,12 @@ require("lspconfig").svelte.setup {
   root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
 }
 
+require("lspconfig").marksman.setup {
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  flags = { debounce_text_changes = 300 },
+  root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
+}
+
+
 return M
