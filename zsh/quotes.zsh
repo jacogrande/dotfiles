@@ -53,7 +53,7 @@ get_random_quote() {
 
   # Get a random quote from the JSON file
   # outputs each quote as a line, shuffles the lines, and outputs the first line
-  RANDOM_QUOTE=$(jq -c '.[] | select(.quote != null)' "$QUOTES_FILE" | head -n 1)
+  RANDOM_QUOTE=$(jq -c '.[] | select(.quote != null)' "$QUOTES_FILE" | sort -R | head -n 1)
 
   # Check if jq or sort commands failed
   if [ $? -ne 0 ]; then
