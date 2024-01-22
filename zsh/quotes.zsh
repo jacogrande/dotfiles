@@ -24,6 +24,9 @@ function quote() {
   echo "$AUTHOR" > "$PREVIOUS_AUTHOR_FILE"
   echo "$SOURCE" > "$PREVIOUS_SOURCE_FILE"
 
+  # Format the QUOTE to turn newlines into `\\n`
+  QUOTE=$(echo "$QUOTE" | sed 's/\\n/\\\\n/g')
+
   # Creating a JSON object
   JSON_STRING=$(printf '{"source": "%s", "author": "%s", "quote": "%s"}' \
     "$SOURCE" "$AUTHOR" "$QUOTE")
@@ -50,7 +53,7 @@ get_random_quote() {
 
   # Get a random quote from the JSON file
   # outputs each quote as a line, shuffles the lines, and outputs the first line
-  RANDOM_QUOTE=$(jq -c '.[] | select(.quote != null)' "$QUOTES_FILE" | sort -R | head -n 1)
+  RANDOM_QUOTE=$(jq -c '.[] | select(.quote != null)' "$QUOTES_FILE" | head -n 1)
 
   # Check if jq or sort commands failed
   if [ $? -ne 0 ]; then
