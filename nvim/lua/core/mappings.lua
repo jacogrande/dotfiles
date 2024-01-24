@@ -11,6 +11,14 @@ M.TSTools = {
   }
 }
 
+M.Obsidian = {
+  plugin = true,
+  n = {
+    ["<leader>ot"] = {"<cmd> ObsidianToday <CR>", "Create a new entry for today"},
+    ["<leader>ou"] = {"<cmd> ObsidianTemplate <CR>", "Use an Obsidian template for this document"}
+  }
+}
+
 M.general = {
   i = {
     -- go to  beginning and end
