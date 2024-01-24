@@ -9,6 +9,7 @@ local options = {
     "javascript",
     "json",
     "markdown",
+    "markdown_inline",
     "regex",
     "rust",
     "sql",
