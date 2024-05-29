@@ -313,6 +313,15 @@ local default_plugins = {
       require("typescript-tools").setup({
         on_attach=require("plugins.configs.lspconfig").on_attach,
         tsserver_plugins = {"svelte"},
+        settings = {
+          jsx_close_tag = {
+            enable = true,
+            filetypes = { "javascriptreact", "typescriptreact"}
+          },
+          tsserver_file_preferences = {
+            importModuleSpecifierPreference = "non-relative",
+          }
+        }
       })
       require("core.utils").load_mappings "TSTools"
     end,
@@ -372,7 +381,8 @@ local default_plugins = {
     "epwalsh/obsidian.nvim",
     version = "*",  -- recommended, use latest release instead of latest commit
     lazy = true,
-    ft = "markdown",
+    event = "BufEnter",
+    -- ft = "markdown",
     -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
     -- event = {
     --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
@@ -395,7 +405,32 @@ local default_plugins = {
     cmd = {
       "Git",
     }
-  }
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  },
+  {
+    "epwalsh/pomo.nvim",
+    version = "*",  -- Recommended, use latest release instead of latest commit
+    lazy = false,
+    cmd = { "TimerStart", "TimerRepeat" },
+    dependencies = {
+      -- Optional, but highly recommended if you want to use the "Default" timer
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("pomo").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  },
 }
 
 local config = require("core.utils").load_config()

@@ -15,7 +15,15 @@ M.Obsidian = {
   plugin = true,
   n = {
     ["<leader>ot"] = {"<cmd> ObsidianToday <CR>", "Create a new entry for today"},
+    ["<leader>oy"] = {"<cmd> ObsidianYesterday <CR>", "Open yesterday's entry"},
     ["<leader>ou"] = {"<cmd> ObsidianTemplate <CR>", "Use an Obsidian template for this document"}
+  }
+}
+
+
+M.Surround = {
+  plugin = true,
+  n = {
   }
 }
 
@@ -35,12 +43,21 @@ M.general = {
   n = {
     ["<Esc>"] = { ":noh <CR>", "Clear highlights" },
 
+
     -- switch between windows
     ["<C-h>"] = { "<C-w>h", "Window left" },
     ["<C-l>"] = { "<C-w>l", "Window right" },
     ["<C-j>"] = { "<C-w>j", "Window down" },
     ["<C-k>"] = { "<C-w>k", "Window up" },
 
+    -- section headings
+    ["<leader>is"] = {
+      function()
+        vim.api.nvim_put({"/********  ********/"}, "", true, true)
+        vim.api.nvim_input("bhi")
+      end,
+      "Insert section heading (comment)"
+    },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -64,10 +81,13 @@ M.general = {
     -- move up and down
     ["<C-d>"] = { "<C-d>zz", "Move down half a screen" },
     ["<C-u>"] = { "<C-u>zz", "Move up half a screen" },
-    
+
     -- newline enter
-    ["<CR>"] = {[[o<Esc>o<Esc>ko]], "Create three new lines and insert in the middle"},
-    ["<S-CR>"] = {[[O<Esc>O<Esc>jO]], "Create three new lines above and insert in the middle"},
+    ["<leader>s<CR>"] = {[[o<Esc>o<Esc>ko]], "Create three new lines and insert in the middle"},
+    ["<leader>s<S-CR>"] = {[[O<Esc>O<Esc>jO]], "Create three new lines above and insert in the middle"},
+    ["<leader><CR>"] = {[[o<Esc>]], "Create a new line below"},
+    ["<leader>S-CR>"] = {[[O<Esc>]], "Create a new line above"},
+
 
     -- delete
     ["<leader>d"] = { '"_d', "Delete without yanking" },
@@ -79,9 +99,19 @@ M.general = {
     -- open trouble
     ["<leader>tt"] = { function() require("trouble").open() end, "Open trouble" },
 
-    -- new buffer
+    -- buffers
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
+    ["<leader>lb"] = {"<cmd> e #<CR>", "Last buffer"},
+
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
+
+    -- find/replace
+    ["<leader>r"] = {":%s/\\<<C-r><C-w>\\>//g<left><left>", "Replace word under cursor"},
+    ["<leader>fr"] = {":%s//g<left><left>", "Find and replace"},
+
+    -- quickfix
+    ["<leader>q"] = { "<cmd> copen <CR>", "Quickfix" },
+    ["<leader>Q"] = { "<cmd> cclose <CR>", "Close quickfix" },
 
     -- copy
     ["<leader>y"] = { [["+y]], "Copy to clipboard" },

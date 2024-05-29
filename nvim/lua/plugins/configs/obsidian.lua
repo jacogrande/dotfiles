@@ -73,6 +73,17 @@ completion = {
     subdir = "templates",
     date_format = "%B %-d, %Y",
     time_format = "%H:%M",
+    substitutions = {
+      directory = function()
+        -- Use `vim.fn.expand('%:p')` to get the full path of the current file.
+        local fullPath = vim.fn.expand('%:p')
+        -- Use Lua pattern matching to extract the directory part.
+        -- This pattern essentially captures the name after the last slash `/`
+        -- but before a potential file name or another slash, typically the parent directory name.
+        local directoryName = fullPath:match(".*/(.*)/.*")
+        return directoryName
+      end
+    }
   },
   daily_notes = {
     -- Optional, if you keep daily notes in a separate directory.
