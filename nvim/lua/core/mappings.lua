@@ -43,6 +43,8 @@ M.general = {
   n = {
     ["<Esc>"] = { ":noh <CR>", "Clear highlights" },
 
+    -- auto indent everything
+    ["<leader>in"] = { "mzgg=G`z", "Auto indent" },
 
     -- switch between windows
     ["<C-h>"] = { "<C-w>h", "Window left" },
