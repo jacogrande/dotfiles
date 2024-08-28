@@ -3,7 +3,9 @@ alias gc='conventional_commit'
 alias gs='git status -sb'
 alias ga='git add'
 alias gps='git push'
-alias gpl = 'git pull'
+alias gpl='git pull'
+alias gr='git restore'
+alias gco='git checkout'
 
 # nvim
 alias vim='nvim'
@@ -20,3 +22,5 @@ alias back='cd "$OLDPWD"'
 # pomo
 alias pomo=$HOME/.pomo/bin/pomo
 
+# kitty ssh
+alias ssh="kitten ssh"

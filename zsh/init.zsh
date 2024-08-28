@@ -17,3 +17,8 @@ export NVM_DIR="$HOME/.nvm"
 # https://starship.rs/presets/#pure-prompt
 eval "$(starship init zsh)"
 
+# fzf
+eval "$(fzf --zsh)"
+
+# fuck
+eval "$(thefuck --alias)"
