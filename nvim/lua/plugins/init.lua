@@ -160,7 +160,8 @@ local default_plugins = {
       {
         -- snippet plugin
         "L3MON4D3/LuaSnip",
-        dependencies = "rafamadriz/friendly-snippets",
+        version = "v2.*",
+        build = "make install_jsregexp",
         opts = { history = true, updateevents = "TextChanged,TextChangedI" },
         config = function(_, opts)
           require("plugins.configs.others").luasnip(opts)
@@ -256,28 +257,6 @@ local default_plugins = {
       end
     end,
   },
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
-          keymap = {
-            accept = "<M-l>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
-          }
-        }
-      })
-    end,
-  },
   -- Only load whichkey after all the gui
   {
     "folke/which-key.nvim",
@@ -325,7 +304,7 @@ local default_plugins = {
       })
       require("core.utils").load_mappings "TSTools"
     end,
-    lazy = false
+    lazy = false,
   },
   {
     "ggandor/leap.nvim",
@@ -431,6 +410,13 @@ local default_plugins = {
       })
     end
   },
+  {
+    "supermaven-inc/supermaven-nvim",
+    lazy=false,
+    config = function()
+      require("supermaven-nvim").setup({})
+    end,
+  }
 }
 
 local config = require("core.utils").load_config()

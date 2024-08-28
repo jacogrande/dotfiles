@@ -12,7 +12,6 @@ local options = {
     "rust-analyzer",
     "svelte-language-tools",
     "tailwindcss-language-server",
-    "typescript-language-server",
   }, -- not an option from mason.nvim
 
   PATH = "skip",

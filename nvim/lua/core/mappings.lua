@@ -94,6 +94,10 @@ M.general = {
     -- delete
     ["<leader>d"] = { '"_d', "Delete without yanking" },
 
+    -- change
+    ["c"] = { '"_c', "Change without yanking" },
+    ["<leader>c"] = { 'c', "Change with yanking" },
+
     -- next and previous search results
     ["n"] = {"nzzzv", "Next search result"},
     ["N"] = {"Nzzzv", "Previous search result"},
