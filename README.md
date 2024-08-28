@@ -9,7 +9,7 @@ export DOTFILE_PATH="PATH_TO_YOUR_DOTFILES"
 
 for file in "$DOTFILE_PATH"/*.zsh; do
   source "$file"
-do
+done
 ```
 
 ### [NVIM](https://github.com/neovim/neovim/wiki/Installing-Neovim)
@@ -49,3 +49,6 @@ Here's a list of other handy tools and their installation instructions
 1. [homebrew](https://brew.sh/)
 2. [autojump](https://github.com/wting/autojump)
 3. [asdf](https://asdf-vm.com/guide/getting-started.html)
+4. [fzf](https://github.com/junegunn/fzf)
+5. [fzf-git](https://github.com/junegunn/fzf-git.sh?tab=readme-ov-file)
+6. [thefuck](https://github.com/nvbn/thefuck)
