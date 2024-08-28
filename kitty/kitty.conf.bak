@@ -256,6 +256,6 @@ startup_session startup.conf
 
 
 # BEGIN_KITTY_THEME
-# Catppuccin-Macchiato
+# Belafonte Day
 include current-theme.conf
 # END_KITTY_THEME
