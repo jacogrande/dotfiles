@@ -18,9 +18,13 @@ alias mv="mv -i" # prompt for confirmation before overwrites
 alias cp="cp -i" # prompt for confirmation before overwrites
 alias myip="ifconfig en0 | grep inet | grep -v inet6 | cut -d ' ' -f2"
 alias back='cd "$OLDPWD"'
+alias home="cd ~"
 
 # pomo
 alias pomo=$HOME/.pomo/bin/pomo
 
 # kitty ssh
 alias ssh="kitten ssh"
+
+# lsd
+alias ls="lsd"
