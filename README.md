@@ -12,6 +12,10 @@ for file in "$DOTFILE_PATH"/*.zsh; do
 done
 ```
 
+### REQUIRED PACKAGES
+
+- [jq](https://stedolan.github.io/jq/)
+
 ### [NVIM](https://github.com/neovim/neovim/wiki/Installing-Neovim)
 
 Customized nvchad configs. Once installed, create a symlink with:
@@ -52,3 +56,6 @@ Here's a list of other handy tools and their installation instructions
 4. [fzf](https://github.com/junegunn/fzf)
 5. [fzf-git](https://github.com/junegunn/fzf-git.sh?tab=readme-ov-file)
 6. [thefuck](https://github.com/nvbn/thefuck)
+7. [lsd](https://github.com/lsd-rs/lsd)
+
+**NOTE**: add a `.hushlogin` file to your home directory to stop showing the last login message
