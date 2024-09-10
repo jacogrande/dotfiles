@@ -81,3 +81,5 @@ get_random_quote() {
   gum style --width 80 --align left "$FORMATTED_QUOTE"
 
 }
+
+get_random_quote
