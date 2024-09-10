@@ -10,13 +10,13 @@ $line_break\
 $python\
 $character"""
 
-[directory]
-style = "blue"
+# Set 'foo' as custom color palette
+palette = 'colors'
 
 [character]
-success_symbol = "[❯](purple)"
-error_symbol = "[❯](red)"
-vimcmd_symbol = "[❮](green)"
+success_symbol = "[➜](purple)"
+error_symbol = "[➜](red)"
+vimcmd_symbol = "[➜](green)"
 
 [git_branch]
 format = "[$branch]($style)"
@@ -35,7 +35,7 @@ stashed = "≡"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
+style = "cyan"
 
 [cmd_duration]
 format = "[$duration]($style) "
@@ -44,3 +44,6 @@ style = "yellow"
 [python]
 format = "[$virtualenv]($style) "
 style = "bright-black"
+
+[palettes.colors]
+purple = "#C6A0F6"
