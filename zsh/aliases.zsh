@@ -6,6 +6,7 @@ alias gps='git push'
 alias gpl='git pull'
 alias gr='git restore'
 alias gco='git checkout'
+alias gm='git checkout main'
 
 # nvim
 alias vim='nvim'
