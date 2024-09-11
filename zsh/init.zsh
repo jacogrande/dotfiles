@@ -22,3 +22,6 @@ eval "$(fzf --zsh)"
 
 # fuck
 eval "$(thefuck --alias)"
+
+# bat
+export BAT_THEME="base16"
