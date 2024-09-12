@@ -23,5 +23,8 @@ eval "$(fzf --zsh)"
 # fuck
 eval "$(thefuck --alias)"
 
+# zsh-autosuggestions
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 # bat
 export BAT_THEME="base16"
