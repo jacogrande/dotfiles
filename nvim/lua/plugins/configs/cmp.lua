@@ -68,6 +68,16 @@ local options = {
 
   formatting = formatting_style,
 
+  enabled = function()
+    local ft = vim.api.nvim_buf_get_option(0, "filetype")
+
+    if ft == "markdown" then
+      return false
+    end
+
+    return true
+  end,
+
   mapping = {
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-n>"] = cmp.mapping.select_next_item(),
@@ -88,9 +98,9 @@ local options = {
         fallback()
       end
     end, {
-      "i",
-      "s",
-    }),
+        "i",
+        "s",
+      }),
     ["<Up>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
@@ -100,9 +110,9 @@ local options = {
         fallback()
       end
     end, {
-      "i",
-      "s",
-    }),
+        "i",
+        "s",
+      }),
   },
   sources = {
     { name = "nvim_lsp" },
