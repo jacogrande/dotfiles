@@ -14,9 +14,54 @@ M.TSTools = {
 M.Obsidian = {
   plugin = true,
   n = {
-    ["<leader>ot"] = {"<cmd> ObsidianToday <CR>", "Create a new entry for today"},
-    ["<leader>oy"] = {"<cmd> ObsidianYesterday <CR>", "Open yesterday's entry"},
-    ["<leader>ou"] = {"<cmd> ObsidianTemplate <CR>", "Use an Obsidian template for this document"}
+    -- Daily notes
+    ["<leader>ot"] = {"<cmd> ObsidianToday <CR>", "Open today's note"},
+    ["<leader>oy"] = {"<cmd> ObsidianYesterday <CR>", "Open yesterday's note"},
+    ["<leader>otm"] = {"<cmd> ObsidianTomorrow <CR>", "Open tomorrow's note"},
+
+    -- Note management
+    ["<leader>on"] = {"<cmd> ObsidianNew <CR>", "Create a new note"},
+    ["<leader>oo"] = {"<cmd> ObsidianQuickSwitch <CR>", "Quick switch to note"},
+    ["<leader>os"] = {"<cmd> ObsidianSearch <CR>", "Search for a note"},
+    ["<leader>ob"] = {"<cmd> ObsidianBacklinks <CR>", "Show backlinks"},
+    ["<leader>or"] = {"<cmd> ObsidianRename <CR>", "Rename note"},
+
+    -- Templates and workspace
+    ["<leader>ou"] = {"<cmd> ObsidianTemplate <CR>", "Use an Obsidian template"},
+    ["<leader>ow"] = {"<cmd> ObsidianWorkspace <CR>", "Switch workspace"},
+
+    -- Open and paste
+    ["<leader>oa"] = {"<cmd> ObsidianOpen <CR>", "Open in Obsidian app"},
+    ["<leader>op"] = {"<cmd> ObsidianPasteImg <CR>", "Paste image from clipboard"},
+
+    -- Tags and links
+    ["<leader>oT"] = {"<cmd> ObsidianTags <CR>", "Search for tags"},
+    ["<leader>ol"] = {"<cmd> ObsidianLinks <CR>", "Show all links"},
+
+    -- Checkbox toggle
+    ["<leader>cb"] = {
+      function()
+        return require("obsidian").util.toggle_checkbox()
+      end,
+      "Toggle checkbox"
+    },
+
+    -- Follow link with gf
+    ["gf"] = {
+      function()
+        if require("obsidian").util.cursor_on_markdown_link() then
+          return "<cmd>ObsidianFollowLink<CR>"
+        else
+          return "gf"
+        end
+      end,
+      "Smart gf (follow link or default)",
+      opts = { expr = true }
+    },
+  },
+  v = {
+    ["<C-k>"] = {"<cmd> ObsidianLink <CR>", "Link selection to note"},
+    ["<leader>oe"] = {"<cmd> ObsidianExtractNote <CR>", "Extract selection to new note"},
   }
 }
 
@@ -24,6 +69,76 @@ M.Obsidian = {
 M.Surround = {
   plugin = true,
   n = {
+  }
+}
+
+M.Harpoon = {
+  plugin = true,
+  n = {
+    ["<leader>ha"] = { function() require("harpoon"):list():append() end, "Add file to harpoon" },
+    ["<leader>hh"] = { function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, "Toggle harpoon menu" },
+    ["<leader>h1"] = { function() require("harpoon"):list():select(1) end, "Go to harpoon file 1" },
+    ["<leader>h2"] = { function() require("harpoon"):list():select(2) end, "Go to harpoon file 2" },
+    ["<leader>h3"] = { function() require("harpoon"):list():select(3) end, "Go to harpoon file 3" },
+    ["<leader>h4"] = { function() require("harpoon"):list():select(4) end, "Go to harpoon file 4" },
+    ["<C-S-P>"] = { function() require("harpoon"):list():prev() end, "Previous harpoon file" },
+    ["<C-S-N>"] = { function() require("harpoon"):list():next() end, "Next harpoon file" },
+  }
+}
+
+M.Oil = {
+  plugin = true,
+  n = {
+    ["-"] = { "<cmd>Oil<cr>", "Open parent directory" },
+  }
+}
+
+M.Debug = {
+  plugin = true,
+  n = {
+    ["<leader>db"] = { function() require("dap").toggle_breakpoint() end, "Toggle breakpoint" },
+    ["<leader>dB"] = { function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, "Set conditional breakpoint" },
+    ["<leader>dc"] = { function() require("dap").continue() end, "Continue" },
+    ["<leader>dC"] = { function() require("dap").run_to_cursor() end, "Run to cursor" },
+    ["<leader>di"] = { function() require("dap").step_into() end, "Step into" },
+    ["<leader>do"] = { function() require("dap").step_out() end, "Step out" },
+    ["<leader>dO"] = { function() require("dap").step_over() end, "Step over" },
+    ["<leader>dr"] = { function() require("dap").repl.toggle() end, "Toggle REPL" },
+    ["<leader>dt"] = { function() require("dap").terminate() end, "Terminate" },
+    ["<leader>du"] = { function() require("dapui").toggle() end, "Toggle DAP UI" },
+    ["<leader>de"] = { function() require("dapui").eval() end, "Evaluate expression" },
+  },
+  v = {
+    ["<leader>de"] = { function() require("dapui").eval() end, "Evaluate expression" },
+  }
+}
+
+M.Test = {
+  plugin = true,
+  n = {
+    ["<leader>tn"] = { function() require("neotest").run.run() end, "Run nearest test" },
+    ["<leader>tf"] = { function() require("neotest").run.run(vim.fn.expand("%")) end, "Run test file" },
+    ["<leader>td"] = { function() require("neotest").run.run({strategy = "dap"}) end, "Debug nearest test" },
+    ["<leader>ts"] = { function() require("neotest").summary.toggle() end, "Toggle test summary" },
+    ["<leader>to"] = { function() require("neotest").output.open({ enter = true, auto_close = true }) end, "Show test output" },
+    ["<leader>tO"] = { function() require("neotest").output_panel.toggle() end, "Toggle test output panel" },
+    ["<leader>tS"] = { function() require("neotest").run.stop() end, "Stop test" },
+  }
+}
+
+M.Git = {
+  plugin = true,
+  n = {
+    ["<leader>gd"] = { "<cmd>DiffviewOpen<cr>", "Open diffview" },
+    ["<leader>gh"] = { "<cmd>DiffviewFileHistory<cr>", "Open file history" },
+  }
+}
+
+M.Productivity = {
+  plugin = true,
+  n = {
+    ["<leader>ut"] = { "<cmd>UndotreeToggle<cr>", "Toggle undotree" },
+    ["<leader>rn"] = { function() return ":IncRename " .. vim.fn.expand("<cword>") end, "Incremental rename", opts = { expr = true } },
   }
 }
 
@@ -55,10 +170,20 @@ M.general = {
     -- section headings
     ["<leader>is"] = {
       function()
-        vim.api.nvim_put({"/********  ********/"}, "", true, true)
+        vim.api.nvim_input("h")
+        vim.api.nvim_put({"//=========  =========//"}, "", true, true)
         vim.api.nvim_input("bhi")
       end,
       "Insert section heading (comment)"
+    },
+
+    -- inline comment
+    ["<leader>ic"] = {
+      function()
+        vim.api.nvim_put({"/*  */"}, "", true, true)
+        vim.api.nvim_input("bhi")
+      end,
+      "Insert inline comment"
     },
 
     -- save
@@ -70,6 +195,9 @@ M.general = {
     -- line numbers
     ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
     ["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
+
+    -- toggle wrap
+    ["<leader>tw"] = { "<cmd> set wrap! <CR>", "Toggle line wrap" },
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -103,11 +231,13 @@ M.general = {
     ["N"] = {"Nzzzv", "Previous search result"},
 
     -- open trouble
-    ["<leader>tt"] = { function() require("trouble").open() end, "Open trouble" },
+    -- ["<leader>tt"] = { "<cmd> TroubleToggle 1 <CR>", "Open trouble" },
 
     -- buffers
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>lb"] = {"<cmd> e #<CR>", "Last buffer"},
+    ["<leader>vs"] = {"<cmd> vsplit | bnext <CR>", "Vertical split with next buffer"},
+    ["<leader>hs"] = {"<cmd> split | bnext <CR>", "Horizontal split with next buffer"},
 
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
 
@@ -128,6 +258,10 @@ M.general = {
       end,
       "LSP formatting",
     },
+
+    -- end/start of line with shift + l or h
+    ["<S-l>"] = { "$", "End of line" },
+    ["<S-h>"] = { "^", "Start of line" },
   },
 
   t = {
@@ -214,9 +348,9 @@ M.lspconfig = {
     },
     ["gD"] = {
       function()
-        vim.lsp.buf.declaration()
+        vim.lsp.buf.implementation()
       end,
-      "LSP declaration",
+      "LSP implementation",
     },
 
     ["gd"] = {
@@ -344,7 +478,7 @@ M.telescope = {
 
   n = {
     -- find
-    ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<leader>ff"] = { "<cmd> Telescope find_files hidden=true <CR>", "Find files" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
@@ -355,7 +489,7 @@ M.telescope = {
 
     -- git
     ["<leader>cm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
     ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },

@@ -56,6 +56,19 @@ vim.wo.relativenumber = true
 -- interval for writing swap file to disk, also used by gitsigns
 opt.updatetime = 250
 
+-- Enhanced defaults for better experience
+opt.spell = true
+opt.spelllang = { "en_us" }
+opt.smoothscroll = true
+opt.splitkeep = "screen"
+opt.conceallevel = 2
+opt.concealcursor = "nc"
+
+-- Better search experience
+opt.inccommand = "split"
+opt.scrolloff = 8
+opt.sidescrolloff = 8
+
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
 opt.whichwrap:append "<>[]hl"
@@ -79,6 +92,28 @@ autocmd("FileType", {
   pattern = "qf",
   callback = function()
     vim.opt_local.buflisted = false
+  end,
+})
+
+-- Load Obsidian plugin when starting vim in a vault directory
+autocmd({ "VimEnter", "DirChanged" }, {
+  callback = function()
+    local cwd = vim.fn.getcwd()
+    local vaults = {
+      vim.fn.expand("~") .. "/vaults/personal",
+      vim.fn.expand("~") .. "/vaults/dnd",
+    }
+
+    -- Check if current directory is within a vault
+    for _, vault in ipairs(vaults) do
+      if cwd:find(vault, 1, true) == 1 then
+        -- We're in a vault directory, load obsidian plugin
+        require("lazy").load({ plugins = { "obsidian.nvim" } })
+        -- Load the mappings (they should already be loaded via init function, but ensure it)
+        require("core.utils").load_mappings "Obsidian"
+        return
+      end
+    end
   end,
 })
 
