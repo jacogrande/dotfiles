@@ -41,87 +41,115 @@ M.capabilities.textDocument.completion.completionItem = {
   },
 }
 
-require("lspconfig").lua_ls.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
+M.capabilities = require("cmp_nvim_lsp").default_capabilities(M.capabilities)
 
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { "vim" },
-      },
-      workspace = {
-        library = {
-          [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-          [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-          [vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types"] = true,
-          [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+local has_vim_lsp_config = vim.fn.has "nvim-0.11" == 1
+
+local servers = {
+  lua_ls = {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim" },
         },
-        maxPreload = 100000,
-        preloadFileSize = 10000,
+        workspace = {
+          library = {
+            [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+            [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+            [vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types"] = true,
+            [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+          },
+          maxPreload = 100000,
+          preloadFileSize = 10000,
+        },
+      },
+    },
+  },
+
+  gopls = {
+    cmd = { "gopls", "serve" },
+    settings = {
+      gopls = {
+        gofumpt = true,
+        codelenses = {
+          gc_details = false,
+          generate = true,
+          regenerate_cgo = true,
+          run_govulncheck = true,
+          test = true,
+          tidy = true,
+          upgrade_dependency = true,
+          vendor = true,
+        },
+        hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          functionTypeParameters = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+        },
+        analyses = {
+          fieldalignment = true,
+          nilness = true,
+          unusedparams = true,
+          unusedwrite = true,
+          useany = true,
+        },
+        usePlaceholders = true,
+        completeUnimported = true,
+        staticcheck = true,
+        directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+        semanticTokens = true,
+      },
+    },
+  },
+
+  svelte = {
+    cmd = { "svelteserver", "--stdio" },
+    filetypes = { "svelte" },
+  },
+
+  marksman = {},
+
+  gleam = {
+    cmd = { "gleam", "lsp" },
+    filetypes = { "gleam" },
+  },
+
+  elixirls = {
+    cmd = { "elixir-ls" },
+    filetypes = { "elixir", "eelixir", "heex", "surface" },
+    settings = {
+      elixirLS = {
+        dialyzerEnabled = false,
+        fetchDeps = false,
       },
     },
   },
 }
 
+if has_vim_lsp_config then
+  vim.lsp.config("*", {
+    on_attach = M.on_attach,
+    capabilities = M.capabilities,
+  })
 
-require("lspconfig").gopls.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-  cmd = { "gopls", "serve" },
-  settings = {
-    gopls = {
-      gofumpt = true,
-      codelenses = {
-        gc_details = false,
-        generate = true,
-        regenerate_cgo = true,
-        run_govulncheck = true,
-        test = true,
-        tidy = true,
-        upgrade_dependency = true,
-        vendor = true,
-      },
-      hints = {
-        assignVariableTypes = true,
-        compositeLiteralFields = true,
-        compositeLiteralTypes = true,
-        constantValues = true,
-        functionTypeParameters = true,
-        parameterNames = true,
-        rangeVariableTypes = true,
-      },
-      analyses = {
-        fieldalignment = true,
-        nilness = true,
-        unusedparams = true,
-        unusedwrite = true,
-        useany = true,
-      },
-      usePlaceholders = true,
-      completeUnimported = true,
-      staticcheck = true,
-      directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-      semanticTokens = true,
-    },
-  },
-}
+  for server, opts in pairs(servers) do
+    vim.lsp.config(server, opts)
+  end
 
-require("lspconfig").svelte.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-  cmd = { "svelteserver", "--stdio" },
-  filetypes = { "svelte" },
-  flags = { debounce_text_changes = 300 },
-  root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
-}
+  vim.lsp.enable(vim.tbl_keys(servers))
+else
+  local lspconfig = require "lspconfig"
 
-require("lspconfig").marksman.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-  flags = { debounce_text_changes = 300 },
-  root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
-}
-
+  for server, opts in pairs(servers) do
+    lspconfig[server].setup(vim.tbl_deep_extend("force", {
+      on_attach = M.on_attach,
+      capabilities = M.capabilities,
+    }, opts))
+  end
+end
 
 return M
