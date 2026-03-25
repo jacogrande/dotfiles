@@ -73,7 +73,7 @@ local default_plugins = {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = {'JoosepAlviste/nvim-ts-context-commentstring', 'nvim-treesitter/nvim-treesitter-textobjects', 'tree-sitter/tree-sitter-python'},
+    dependencies = {'JoosepAlviste/nvim-ts-context-commentstring', 'nvim-treesitter/nvim-treesitter-textobjects', 'tree-sitter/tree-sitter-python', 'tree-sitter/tree-sitter-c-sharp'},
     init = function()
       require("core.utils").lazy_load "nvim-treesitter"
     end,
@@ -138,12 +138,6 @@ local default_plugins = {
 
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "jose-elias-alvarez/null-ls.nvim",
-      config = function()
-        require "custom.configs.null-ls"
-      end,
-    },
     init = function()
       require("core.utils").lazy_load "nvim-lspconfig"
     end,
@@ -238,7 +232,10 @@ local default_plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-telescope/telescope-ui-select.nvim",
+    },
     cmd = "Telescope",
     init = function()
       require("core.utils").load_mappings "telescope"
@@ -269,20 +266,21 @@ local default_plugins = {
       require("which-key").setup(opts)
     end,
   },
-  {
-    "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    lazy = false
-  },
-  {
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    config = function()
-      require("lsp_lines").setup()
-      vim.diagnostic.config({
-        virtual_text = false,
-      })
-    end,
-    lazy = false
+  { "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>tt",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>tT",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+    }
   },
   {
     "pmizio/typescript-tools.nvim",
@@ -311,7 +309,15 @@ local default_plugins = {
     lazy = false,
     dependencies = {"tpope/vim-repeat"},
     config = function()
-      require('leap').add_default_mappings()
+      local leap = require "leap"
+      leap.setup({})
+
+      local opts = { silent = true }
+      vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)", opts)
+      vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)", opts)
+      vim.keymap.set({ "x", "o" }, "x", "<Plug>(leap-forward-till)", opts)
+      vim.keymap.set({ "x", "o" }, "X", "<Plug>(leap-backward-till)", opts)
+      vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)", opts)
     end,
   },
   {
@@ -357,26 +363,126 @@ local default_plugins = {
     end,
   },
   {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<leader>fm",
+        function()
+          require("conform").format({ async = true, lsp_fallback = true })
+        end,
+        mode = "",
+        desc = "Format buffer",
+      },
+    },
+    opts = function()
+      return require "plugins.configs.conform"
+    end,
+    init = function()
+      -- If you want the formatexpr, here is the place to set it
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
+  },
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require "plugins.configs.nvim-lint"
+    end,
+  },
+  {
     "epwalsh/obsidian.nvim",
     version = "*",  -- recommended, use latest release instead of latest commit
     lazy = true,
-    event = "BufEnter",
-    -- ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-    --   "BufReadPre path/to/my-vault/**.md",
-    --   "BufNewFile path/to/my-vault/**.md",
-    -- },
+    event = {
+      -- Load plugin only when opening markdown files in vault directories
+      "BufReadPre " .. vim.fn.expand "~" .. "/vaults/personal/**.md",
+      "BufNewFile " .. vim.fn.expand "~" .. "/vaults/personal/**.md",
+      "BufReadPre " .. vim.fn.expand "~" .. "/vaults/dnd/**.md",
+      "BufNewFile " .. vim.fn.expand "~" .. "/vaults/dnd/**.md",
+    },
     dependencies = {
       -- Required.
       "nvim-lua/plenary.nvim",
-
-      -- see below for full list of optional dependencies 👇
+      -- Optional dependencies for better experience
+      "nvim-telescope/telescope.nvim",
+      "hrsh7th/nvim-cmp",
     },
+    init = function()
+      -- Load NvChad mappings when plugin is loaded
+      require("core.utils").load_mappings "Obsidian"
+    end,
     opts = function()
       return require "plugins.configs.obsidian"
+    end,
+    config = function(_, opts)
+      require("obsidian").setup(opts)
+    end,
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("render-markdown").setup({
+        -- Heading configuration
+        heading = {
+          icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        },
+        -- Code block configuration
+        code = {
+          sign = false,
+          width = "block",
+          right_pad = 1,
+        },
+        -- Checkbox configuration
+        checkbox = {
+          enabled = true,
+          unchecked = {
+            icon = "󰄱 ",
+            highlight = "RenderMarkdownUnchecked",
+            scope_highlight = nil,
+          },
+          checked = {
+            icon = " ",
+            highlight = "RenderMarkdownChecked",
+            scope_highlight = nil,
+          },
+        },
+        -- Bullet configuration
+        bullet = {
+          icons = { "●", "○", "◆", "◇" },
+        },
+        -- Quote callouts
+        quote = {
+          icon = "┃",
+        },
+        -- Disable default table rendering (custom table-wrap handles it)
+        pipe_table = {
+          enabled = false,
+          style = "none",
+        },
+        -- Callout configuration
+        callout = {
+          note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "ObsidianNote" },
+          tip = { raw = "[!TIP]", rendered = "󰌶 Tip", highlight = "ObsidianTip" },
+          important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "ObsidianImportant" },
+          warning = { raw = "[!WARNING]", rendered = "󰀪 Warning", highlight = "ObsidianWarning" },
+          caution = { raw = "[!CAUTION]", rendered = "󰳦 Caution", highlight = "ObsidianCaution" },
+        },
+      })
+
+      -- Custom table renderer with cell-internal wrapping
+      local tw_ok, tw = pcall(require, "plugins.configs.table-wrap")
+      if tw_ok then
+        tw.setup()
+      else
+        vim.notify("table-wrap failed to load: " .. tostring(tw), vim.log.levels.WARN)
+      end
     end,
   },
   {
@@ -414,7 +520,349 @@ local default_plugins = {
     "supermaven-inc/supermaven-nvim",
     lazy=false,
     config = function()
-      require("supermaven-nvim").setup({})
+      require("supermaven-nvim").setup({
+        ignore_filetypes = {md = true, markdown = true},
+      })
+    end,
+  },
+  {
+    'echasnovski/mini.nvim',
+    version = false,
+    lazy = false,
+    config = function()
+    end,
+  },
+  -- {
+  --   "jacogrande/socrates",
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   event = { "BufReadPre *.md" },  -- or "BufReadPost"
+  --   config = function()
+  --     require("socrates").setup({
+  --       -- Your custom config goes here
+  --       -- openai_api_key = "sk-xxxxxx", -- or rely on OPENAI_API_KEY env var
+  --       -- model = "gpt-3.5-turbo",
+  --       -- events = { "TextChangedI", "TextChanged" },
+  --       -- debounce_ms = 2000,
+  --     })
+  --   end
+  -- },
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    config = function()
+      require("lsp_lines").setup()
+      -- Disable virtual_text since it's redundant with lsp_lines
+      vim.diagnostic.config({
+        virtual_text = false,
+      })
+    end,
+  },
+  
+  -- UI Enhancements
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+        presets = {
+          bottom_search = true,
+          command_palette = true,
+          long_message_to_split = true,
+          inc_rename = true,
+          lsp_doc_border = false,
+        },
+      })
+    end,
+  },
+  
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require("snacks").setup({
+        bigfile = { enabled = true },
+        notifier = { enabled = true },
+        quickfile = { enabled = true },
+        statuscolumn = { enabled = true },
+        words = { enabled = false },
+      })
+    end,
+  },
+
+  -- File Navigation
+  {
+    "stevearc/oil.nvim",
+    cmd = "Oil",
+    init = function()
+      require("core.utils").load_mappings "Oil"
+    end,
+    opts = {
+      default_file_explorer = false,
+      columns = {
+        "icon",
+        "permissions",
+        "size",
+        "mtime",
+      },
+      buf_options = {
+        buflisted = false,
+        bufhidden = "hide",
+      },
+      win_options = {
+        wrap = false,
+        signcolumn = "no",
+        cursorcolumn = false,
+        foldcolumn = "0",
+        spell = false,
+        list = false,
+        conceallevel = 3,
+        concealcursor = "nvic",
+      },
+      delete_to_trash = true,
+      skip_confirm_for_simple_edits = true,
+      prompt_save_on_select_new_entry = true,
+      cleanup_delay_ms = 2000,
+      lsp_file_operations = true,
+      constrain_cursor = "editable",
+      experimental_watch_for_changes = false,
+      keymaps = {
+        ["g?"] = "actions.show_help",
+        ["<CR>"] = "actions.select",
+        ["<C-s>"] = "actions.select_vsplit",
+        ["<C-h>"] = "actions.select_split",
+        ["<C-t>"] = "actions.select_tab",
+        ["<C-p>"] = "actions.preview",
+        ["<C-c>"] = "actions.close",
+        ["<C-l>"] = "actions.refresh",
+        ["-"] = "actions.parent",
+        ["_"] = "actions.open_cwd",
+        ["`"] = "actions.cd",
+        ["~"] = "actions.tcd",
+        ["gs"] = "actions.change_sort",
+        ["gx"] = "actions.open_external",
+        ["g."] = "actions.toggle_hidden",
+        ["g\\"] = "actions.toggle_trash",
+      },
+      use_default_keymaps = true,
+      view_options = {
+        show_hidden = false,
+        is_hidden_file = function(name, bufnr)
+          return vim.startswith(name, ".")
+        end,
+        is_always_hidden = function(name, bufnr)
+          return false
+        end,
+        sort = {
+          { "type", "asc" },
+          { "name", "asc" },
+        },
+      },
+    },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    init = function()
+      require("core.utils").load_mappings "Harpoon"
+    end,
+    config = function()
+      require("harpoon"):setup({})
+    end,
+  },
+
+  -- Productivity Tools
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    init = function()
+      require("core.utils").load_mappings "Productivity"
+    end,
+    config = function()
+      vim.g.undotree_WindowLayout = 2
+      vim.g.undotree_SplitWidth = 30
+      vim.g.undotree_SetFocusWhenToggle = 1
+    end,
+  },
+
+  {
+    "smjonas/inc-rename.nvim",
+    cmd = "IncRename",
+    config = function()
+      require("inc_rename").setup({
+        input_buffer_type = "dressing",
+      })
+    end,
+  },
+
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    init = function()
+      require("core.utils").load_mappings "Git"
+    end,
+    config = function()
+      require("diffview").setup({
+        enhanced_diff_hl = true,
+        use_icons = true,
+      })
+    end,
+  },
+
+  -- Debugging
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = "nvim-neotest/nvim-nio",
+        config = function()
+          local dap = require("dap")
+          local dapui = require("dapui")
+          dapui.setup({
+            layouts = {
+              {
+                elements = {
+                  { id = "scopes", size = 0.25 },
+                  { id = "breakpoints", size = 0.25 },
+                  { id = "stacks", size = 0.25 },
+                  { id = "watches", size = 0.25 },
+                },
+                position = "left",
+                size = 40
+              },
+              {
+                elements = {
+                  { id = "repl", size = 0.5 },
+                  { id = "console", size = 0.5 },
+                },
+                position = "bottom",
+                size = 10
+              }
+            }
+          })
+          
+          -- Auto open/close dapui
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function()
+            dapui.close()
+          end
+          dap.listeners.before.event_exited["dapui_config"] = function()
+            dapui.close()
+          end
+        end,
+      },
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        config = function()
+          require("nvim-dap-virtual-text").setup({
+            enabled = true,
+            enabled_commands = true,
+            highlight_changed_variables = true,
+            highlight_new_as_changed = false,
+            show_stop_reason = true,
+            commented = false,
+            only_first_definition = true,
+            all_references = false,
+            clear_on_continue = false,
+            display_callback = function(variable, buf, stackframe, node, options)
+              if options.virt_text_pos == 'inline' then
+                return ' = ' .. variable.value
+              else
+                return variable.name .. ' = ' .. variable.value
+              end
+            end,
+          })
+        end,
+      },
+      {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = "mason.nvim",
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {
+          automatic_installation = true,
+          handlers = {},
+          ensure_installed = {
+            "delve",
+            "node2",
+            "python",
+          }
+        },
+      }
+    },
+    init = function()
+      require("core.utils").load_mappings "Debug"
+    end,
+    config = function()
+      local dap = require("dap")
+      
+      -- Configure signs
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DapBreakpointCondition", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "→", texthl = "DapStopped", linehl = "DapStoppedLine", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "●", texthl = "DapBreakpointRejected", linehl = "", numhl = "" })
+    end,
+  },
+
+  -- Testing
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-neotest/neotest-python",
+      "nvim-neotest/neotest-plenary",
+      "nvim-neotest/neotest-jest",
+    },
+    init = function()
+      require("core.utils").load_mappings "Test"
+    end,
+    config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-python")({
+            dap = { justMyCode = false },
+          }),
+          require("neotest-plenary"),
+          require("neotest-jest")({
+            jestCommand = "npm test --",
+            jestConfigFile = "custom.jest.config.ts",
+            env = { CI = true },
+            cwd = function(path)
+              return vim.fn.getcwd()
+            end,
+          }),
+        },
+        status = {
+          virtual_text = true
+        },
+        output = {
+          enabled = true,
+          open_on_run = "short",
+        },
+        quickfix = {
+          enabled = false,
+          open = false,
+        },
+      })
     end,
   }
 }
