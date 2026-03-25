@@ -1,5 +1,5 @@
 # git
-alias gc='conventional_commit'
+gc() { [[ $# -eq 0 ]] && git commit || git commit -m "$*"; }
 alias gs='git status -sb'
 alias ga='git add'
 alias gps='git push'
@@ -7,6 +7,9 @@ alias gpl='git pull'
 alias gr='git restore'
 alias gco='git checkout'
 alias gm='git checkout main'
+
+# claude
+alias c='claude --dangerously-skip-permissions'
 
 # nvim
 alias vim='nvim'
@@ -24,8 +27,43 @@ alias home="cd ~"
 # pomo
 alias pomo=$HOME/.pomo/bin/pomo
 
-# kitty ssh
+# kitty
 alias ssh="kitten ssh"
+alias ktheme="$HOME/.config/dotfiles/kitty/theme-switcher.sh"
+alias ktls="ktheme list"
+alias ktd="ktheme dark && claude config set --global theme dark"
+alias ktl="ktheme light && claude config set --global theme light"
+alias ktr="ktheme auto"
+alias ktcurrent="grep -m 1 'name:' $HOME/.config/dotfiles/kitty/current-theme.conf | sed 's/^## name: *//'"
 
 # lsd
 alias ls="lsd"
+alias lss="lsd --blocks name,size" # display file size
+
+# pnpm
+alias p="pnpm"
+
+# claude
+alias mcp="vim ~/Library/'Application Support'/Claude/claude_desktop_config.json"
+function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+
+# copy file contents to clipboard
+function copy() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: copy <filename>"
+        return 1
+    fi
+    
+    if [[ ! -f "$1" ]]; then
+        echo "Error: File '$1' not found"
+        return 1
+    fi
+    
+    cat "$1" | pbcopy
+    echo "Copied contents of '$1' to clipboard"
+}
+
+# enable autocompletion for copy function
+if command -v compdef > /dev/null; then
+    compdef '_files' copy
+fi

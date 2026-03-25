@@ -6,6 +6,7 @@ export PATH=~/.npm-global/bin:$PATH;
 
 # asdf (https://asdf-vm.com/guide/getting-started.html)
 # . $HOME/.asdf/asdf.sh
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # nvm (https://github.com/neovim/neovim/wiki/Installing-Neovim)
 export NVM_DIR="$HOME/.nvm"
