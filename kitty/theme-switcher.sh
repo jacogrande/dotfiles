@@ -35,12 +35,23 @@ LIGHT_THEMES=(
   "Everforest Light Medium"
   "Github"
   "Novel"
-  "Ocean"
-  "Selenized Light"
+  "Selenized White"
   "Selenized White"
   "seoulbones_light"
   "Spring"
   "Tokyo Night Day"
+  "Rosé Pine Dawn"
+  "Spring"
+  "Tomorrow"
+  "zenbones_light"
+  "1984 Light"
+  "Adwaita light"
+  "Ayu Light"
+  "Doom One Light"
+  "Kaolin Light"
+  "Material"
+  "neobones_light"
+  "Pencil Light"
 )
 
 # NvChad theme mappings
@@ -51,8 +62,8 @@ NVCHAD_DARK_THEMES=(
   "aquarium" # Aquarium Dark
   "tundra" # Atelier Sulphurpool Dark
   "kanagawa" # Ayaka
-  "tundra" # Base2Tone Pool Dark
-  "decay" # Base2Tone Field Dark
+  "rosepine" # Base2Tone Pool Dark
+  "everblush" # Base2Tone Field Dark
   "onedark" # Base2Tone Suburb Dark
   "rosepine" # Duskfox
   "chadracula" # Eldritch
@@ -60,7 +71,7 @@ NVCHAD_DARK_THEMES=(
   "kanagawa" # Kanagawa
   "nightfox" # Kaolin Galaxy
   "vscode_dark" # Mayukai
-  "gruvbox" # Mellow
+  "mountain" # Mellow
   "nightowl" # moonlight
   "gruvchad" # Pencil Dark
   "rosepine" # Rose Pine
@@ -78,12 +89,23 @@ NVCHAD_LIGHT_THEMES=(
   "oceanic-light" # Everforest Light Medium
   "github_light" # Github
   "oceanic-light" # Novel
-  "oceanic-light" # Ocean
   "oceanic-light" # Selenized Light
   "oceanic-light" # Selenized White
   "oceanic-light" # seoulbones_light
   "oceanic-light" # Spring
   "github_light" # Tokyo Night Day
+  "github_light" # Rosé Pine Dawn
+  "github_light" # Spring
+  "github_light" # Tomorrow
+  "github_light" # zenbones_light
+  "github_light" # 1984 Light
+  "github_light" # Adwaita light
+  "github_light" # Ayu Light
+  "github_light" # Doom One Light
+  "github_light" # Kaolin Light
+  "github_light" # Material
+  "github_light" # neobones_light
+  "github_light" # Pencil Light
 )
 
 # Check macOS appearance setting
@@ -280,12 +302,36 @@ kitten themes --reload-in=all "$THEME"
 
 # Get the index of the selected theme for updating NvChad
 theme_index=0
+
+# Determine which theme array to search in
+if [ "$1" = "dark" ] || ([ "$1" = "auto" ] && check_dark_mode); then
+  SEARCH_THEMES=("${DARK_THEMES[@]}")
+elif [ "$1" = "light" ] || ([ "$1" = "auto" ] && ! check_dark_mode); then
+  SEARCH_THEMES=("${LIGHT_THEMES[@]}")
+else
+  # Default case - check system setting
+  if check_dark_mode; then
+    SEARCH_THEMES=("${DARK_THEMES[@]}")
+  else
+    SEARCH_THEMES=("${LIGHT_THEMES[@]}")
+  fi
+fi
+
+# If a specific index was provided, use it
 if [ "$1" = "dark" ] || [ "$1" = "light" ]; then
   if [[ "$2" =~ ^[0-9]+$ ]]; then
     theme_index=$2
   elif [ "$2" = "random" ] && [ -n "$RANDOM_THEME_INDEX" ]; then
     # Use the exported random index from get_theme
     theme_index=$RANDOM_THEME_INDEX
+  else
+    # No index provided - find the index of the selected theme
+    for i in "${!SEARCH_THEMES[@]}"; do
+      if [ "${SEARCH_THEMES[$i]}" = "$THEME" ]; then
+        theme_index=$i
+        break
+      fi
+    done
   fi
 else
   # Auto mode
@@ -293,6 +339,14 @@ else
     theme_index=$1
   elif [ "$1" = "random" ] && [ -n "$RANDOM_THEME_INDEX" ]; then
     theme_index=$RANDOM_THEME_INDEX
+  else
+    # No index provided - find the index of the selected theme
+    for i in "${!SEARCH_THEMES[@]}"; do
+      if [ "${SEARCH_THEMES[$i]}" = "$THEME" ]; then
+        theme_index=$i
+        break
+      fi
+    done
   fi
 fi
 
