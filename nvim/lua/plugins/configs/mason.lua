@@ -4,6 +4,7 @@ local options = {
     "bash-language-server",
     "css-lsp",
     "eslint-lsp",
+    "elixir-ls",
     "emmet-language-server",
     "haskell-language-server",
     "html-lsp",

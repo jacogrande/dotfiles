@@ -69,7 +69,7 @@ local options = {
   formatting = formatting_style,
 
   enabled = function()
-    local ft = vim.api.nvim_buf_get_option(0, "filetype")
+    local ft = vim.bo.filetype
 
     if ft == "markdown" then
       return false

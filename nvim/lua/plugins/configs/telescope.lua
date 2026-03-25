@@ -26,16 +26,19 @@ local options = {
       vertical = {
         mirror = false,
       },
-      width = 0.87,
-      height = 0.80,
+      width = 0.90,
+      height = 0.85,
       preview_cutoff = 120,
     },
     file_sorter = require("telescope.sorters").get_fuzzy_file,
-    file_ignore_patterns = { "node_modules", "venv", "dist", "build" },
+    file_ignore_patterns = { "node_modules", "venv", "dist", "build", ".git" },
     generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
     path_display = { "truncate" },
-    winblend = 0,
-    border = {},
+    winblend = 10,
+    border = true,
+    prompt_title = "  Search",
+    results_title = "  Results",
+    preview_title = "  Preview",
     borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
     color_devicons = true,
     set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
@@ -47,9 +50,12 @@ local options = {
     mappings = {
       n = { ["q"] = require("telescope.actions").close },
     },
+    find_files = {
+      hidden = true,
+    }
   },
 
-  extensions_list = { "themes", "terms" },
+  extensions_list = { "themes", "terms", "ui-select" },
 }
 
 return options
