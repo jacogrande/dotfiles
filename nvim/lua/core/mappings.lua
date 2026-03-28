@@ -11,67 +11,6 @@ M.TSTools = {
   }
 }
 
-M.Obsidian = {
-  plugin = true,
-  n = {
-    -- Daily notes
-    ["<leader>ot"] = {"<cmd> ObsidianToday <CR>", "Open today's note"},
-    ["<leader>oy"] = {"<cmd> ObsidianYesterday <CR>", "Open yesterday's note"},
-    ["<leader>otm"] = {"<cmd> ObsidianTomorrow <CR>", "Open tomorrow's note"},
-
-    -- Note management
-    ["<leader>on"] = {"<cmd> ObsidianNew <CR>", "Create a new note"},
-    ["<leader>oo"] = {"<cmd> ObsidianQuickSwitch <CR>", "Quick switch to note"},
-    ["<leader>os"] = {"<cmd> ObsidianSearch <CR>", "Search for a note"},
-    ["<leader>ob"] = {"<cmd> ObsidianBacklinks <CR>", "Show backlinks"},
-    ["<leader>or"] = {"<cmd> ObsidianRename <CR>", "Rename note"},
-
-    -- Templates and workspace
-    ["<leader>ou"] = {"<cmd> ObsidianTemplate <CR>", "Use an Obsidian template"},
-    ["<leader>ow"] = {"<cmd> ObsidianWorkspace <CR>", "Switch workspace"},
-
-    -- Open and paste
-    ["<leader>oa"] = {"<cmd> ObsidianOpen <CR>", "Open in Obsidian app"},
-    ["<leader>op"] = {"<cmd> ObsidianPasteImg <CR>", "Paste image from clipboard"},
-
-    -- Tags and links
-    ["<leader>oT"] = {"<cmd> ObsidianTags <CR>", "Search for tags"},
-    ["<leader>ol"] = {"<cmd> ObsidianLinks <CR>", "Show all links"},
-
-    -- Checkbox toggle
-    ["<leader>cb"] = {
-      function()
-        return require("obsidian").util.toggle_checkbox()
-      end,
-      "Toggle checkbox"
-    },
-
-    -- Follow link with gf
-    ["gf"] = {
-      function()
-        if require("obsidian").util.cursor_on_markdown_link() then
-          return "<cmd>ObsidianFollowLink<CR>"
-        else
-          return "gf"
-        end
-      end,
-      "Smart gf (follow link or default)",
-      opts = { expr = true }
-    },
-  },
-  v = {
-    ["<C-k>"] = {"<cmd> ObsidianLink <CR>", "Link selection to note"},
-    ["<leader>oe"] = {"<cmd> ObsidianExtractNote <CR>", "Extract selection to new note"},
-  }
-}
-
-
-M.Surround = {
-  plugin = true,
-  n = {
-  }
-}
-
 M.Harpoon = {
   plugin = true,
   n = {

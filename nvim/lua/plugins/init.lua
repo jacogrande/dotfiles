@@ -343,15 +343,6 @@ local default_plugins = {
     event="BufRead",
   },
   {
-    "m4xshen/hardtime.nvim",
-    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-    opts = {},
-    lazy=false,
-    config = function()
-      require("hardtime").setup({})
-    end,
-  },
-  {
     "MunifTanjim/eslint.nvim",
     config = function()
       require("eslint").setup({
@@ -389,35 +380,6 @@ local default_plugins = {
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require "plugins.configs.nvim-lint"
-    end,
-  },
-  {
-    "epwalsh/obsidian.nvim",
-    version = "*",  -- recommended, use latest release instead of latest commit
-    lazy = true,
-    event = {
-      -- Load plugin only when opening markdown files in vault directories
-      "BufReadPre " .. vim.fn.expand "~" .. "/vaults/personal/**.md",
-      "BufNewFile " .. vim.fn.expand "~" .. "/vaults/personal/**.md",
-      "BufReadPre " .. vim.fn.expand "~" .. "/vaults/dnd/**.md",
-      "BufNewFile " .. vim.fn.expand "~" .. "/vaults/dnd/**.md",
-    },
-    dependencies = {
-      -- Required.
-      "nvim-lua/plenary.nvim",
-      -- Optional dependencies for better experience
-      "nvim-telescope/telescope.nvim",
-      "hrsh7th/nvim-cmp",
-    },
-    init = function()
-      -- Load NvChad mappings when plugin is loaded
-      require("core.utils").load_mappings "Obsidian"
-    end,
-    opts = function()
-      return require "plugins.configs.obsidian"
-    end,
-    config = function(_, opts)
-      require("obsidian").setup(opts)
     end,
   },
   {
@@ -502,21 +464,6 @@ local default_plugins = {
     end
   },
   {
-    "epwalsh/pomo.nvim",
-    version = "*",  -- Recommended, use latest release instead of latest commit
-    lazy = false,
-    cmd = { "TimerStart", "TimerRepeat" },
-    dependencies = {
-      -- Optional, but highly recommended if you want to use the "Default" timer
-      "rcarriga/nvim-notify",
-    },
-    config = function()
-      require("pomo").setup({
-        -- Configuration here, or leave empty to use defaults
-      })
-    end
-  },
-  {
     "supermaven-inc/supermaven-nvim",
     lazy=false,
     config = function()
@@ -532,20 +479,6 @@ local default_plugins = {
     config = function()
     end,
   },
-  -- {
-  --   "jacogrande/socrates",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   event = { "BufReadPre *.md" },  -- or "BufReadPost"
-  --   config = function()
-  --     require("socrates").setup({
-  --       -- Your custom config goes here
-  --       -- openai_api_key = "sk-xxxxxx", -- or rely on OPENAI_API_KEY env var
-  --       -- model = "gpt-3.5-turbo",
-  --       -- events = { "TextChangedI", "TextChanged" },
-  --       -- debounce_ms = 2000,
-  --     })
-  --   end
-  -- },
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     config = function()
