@@ -150,7 +150,7 @@ brew install --cask claude         # Claude desktop app
 
 Built on [NvChad](https://nvchad.com/). After symlinking `nvim/`, open nvim and let lazy.nvim install plugins automatically.
 
-Notable plugins: harpoon2, oil.nvim, nvim-dap, neotest, conform.nvim, nvim-lint, obsidian.nvim, render-markdown, diffview.nvim, telescope, noice.nvim.
+Notable plugins: harpoon2, oil.nvim, nvim-dap, neotest, conform.nvim, nvim-lint, render-markdown, diffview.nvim, telescope, noice.nvim.
 
 LSP servers are managed by Mason. Key ones: `lua_ls`, `gopls`, `elixirls`, `gleam`, `svelte`, `marksman`.
 
