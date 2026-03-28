@@ -10,6 +10,7 @@ alias gm='git checkout main'
 
 # claude
 alias c='claude --dangerously-skip-permissions'
+alias mcp="vim ~/Library/'Application Support'/Claude/claude_desktop_config.json"
 
 # nvim
 alias vim='nvim'
@@ -40,8 +41,7 @@ alias lss="lsd --blocks name,size" # display file size
 # pnpm
 alias p="pnpm"
 
-# claude
-alias mcp="vim ~/Library/'Application Support'/Claude/claude_desktop_config.json"
+# macOS timeout (not available by default)
 function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
 
 # copy file contents to clipboard
