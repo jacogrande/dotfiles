@@ -473,13 +473,6 @@ local default_plugins = {
     end,
   },
   {
-    'echasnovski/mini.nvim',
-    version = false,
-    lazy = false,
-    config = function()
-    end,
-  },
-  {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     config = function()
       require("lsp_lines").setup()
