@@ -264,6 +264,7 @@ macos_option_as_alt yes
 # macos_titlebar_color background
 
 allow_remote_control yes
+listen_on unix:/tmp/kitty
 
 # Enable shell integration (removed duplicate, see line 39)
 
@@ -276,6 +277,6 @@ map f10 launch --type=background /Users/jackson/.config/dotfiles/kitty/theme-swi
 
 
 # BEGIN_KITTY_THEME
-# Mayukai
+# Terafox
 include current-theme.conf
 # END_KITTY_THEME
