@@ -24,9 +24,6 @@ alias myip="ifconfig en0 | grep inet | grep -v inet6 | cut -d ' ' -f2"
 alias back='cd "$OLDPWD"'
 alias home="cd ~"
 
-# pomo
-alias pomo=$HOME/.pomo/bin/pomo
-
 # kitty
 alias ssh="kitten ssh"
 alias ktheme="$HOME/.config/dotfiles/kitty/theme-switcher.sh"
