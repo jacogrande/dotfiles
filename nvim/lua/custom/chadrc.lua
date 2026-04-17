@@ -1,4 +1,4 @@
 ---@type ChadrcConfig 
  local M = {}
- M.ui = {theme = 'oceanic-light'}
+ M.ui = {theme = 'github_light'}
  return M
